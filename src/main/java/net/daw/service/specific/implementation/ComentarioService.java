@@ -62,12 +62,15 @@ public class ComentarioService extends TableServiceGenImpl {
             int id_usuario = oUserBean.getId();
         
             
+            
+            
             Connection oConnection = new BoneConnectionPoolImpl().newConnection();
             ComentarioDao oComentarioDao = new ComentarioDao(oConnection);
             ComentarioBean oComentarioBean = new ComentarioBean();
             String json = ParameterCook.prepareJson(oRequest);
             Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
 
+            if(oComentarioBean.getId() != 0){
             oComentarioBean = gson.fromJson(json, ComentarioBean.class);
             oComentarioBean = oComentarioDao.set(oComentarioBean, id_usuario);
             Map<String, String> data = new HashMap<>();
@@ -75,6 +78,18 @@ public class ComentarioService extends TableServiceGenImpl {
             data.put("message", Integer.toString(oComentarioBean.getId()));
             String resultado = gson.toJson(data);
             return resultado;
+            
+            }else{
+            Map<String, String> data = new HashMap<>();
+            data.put("status", "500");
+            data.put("message", Integer.toString(oComentarioBean.getId()));    
+            String resultado = gson.toJson(data);
+            return resultado;
+            
+            }
+        
+          
     }
     
 }
+
