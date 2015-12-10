@@ -53,43 +53,40 @@ public class ComentarioService extends TableServiceGenImpl {
     public ComentarioService(HttpServletRequest request) {
         super(request);
     }
-    
-   
+
     @Override
     public String set() throws Exception {
-        
-            UsuarioBean oUserBean = (UsuarioBean) oRequest.getSession().getAttribute("userBean");
-            int id_usuario = oUserBean.getId();
-        
-            
-            
-            
-            Connection oConnection = new BoneConnectionPoolImpl().newConnection();
-            ComentarioDao oComentarioDao = new ComentarioDao(oConnection);
-            ComentarioBean oComentarioBean = new ComentarioBean();
-            String json = ParameterCook.prepareJson(oRequest);
-            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
 
-            if(oComentarioBean.getId() != 0){
-            oComentarioBean = gson.fromJson(json, ComentarioBean.class);
-            oComentarioBean = oComentarioDao.set(oComentarioBean, id_usuario);
+        UsuarioBean oUserBean = (UsuarioBean) oRequest.getSession().getAttribute("userBean");
+        int id_usuario = oUserBean.getId();
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        ComentarioDao oComentarioDao = new ComentarioDao(oConnection);
+        ComentarioBean oComentarioBean = new ComentarioBean();
+        String json = ParameterCook.prepareJson(oRequest);
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+
+        oComentarioBean = gson.fromJson(json, ComentarioBean.class);
+        oComentarioBean = oComentarioDao.set(oComentarioBean, id_usuario);
+
+        if (oComentarioBean.getId() != 0) {
+            
             Map<String, String> data = new HashMap<>();
             data.put("status", "200");
             data.put("message", Integer.toString(oComentarioBean.getId()));
             String resultado = gson.toJson(data);
             return resultado;
+
+        } else {
             
-            }else{
             Map<String, String> data = new HashMap<>();
             data.put("status", "500");
-            data.put("message", Integer.toString(oComentarioBean.getId()));    
+            data.put("message", Integer.toString(oComentarioBean.getId()));
             String resultado = gson.toJson(data);
             return resultado;
-            
-            }
-        
-          
-    }
-    
-}
 
+        }
+
+    }
+
+}
